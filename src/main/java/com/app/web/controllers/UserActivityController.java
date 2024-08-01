@@ -1,7 +1,7 @@
 package com.app.web.controllers;
 
-import com.app.web.entity.TranslateRequest;
-import com.app.web.entity.TranslateResponse;
+import com.app.web.entities.TranslateRequest;
+import com.app.web.entities.TranslateResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
