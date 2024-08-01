@@ -20,7 +20,7 @@
         </encoder>
     </appender>
 
-    <logger name="telegram.telegrambot.DemoBot"     level="debug" additivity="false">
+    <logger name="com.app.Translator"     level="debug" additivity="false">
         <appender-ref ref="FILE-ROLLING"/>
     </logger>
 
