@@ -8,7 +8,9 @@ public enum HttpKeysConstants {
 
     SOURCE_LANGUAGE_KEY("sourceLanguageCode"),
 
-    SENTENCE_TRANSLATE_KEY("texts");
+    SENTENCE_TRANSLATE_KEY("texts"),
+
+    API_KEY_FORMAT("Api-Key %s");
 
     private final String key;
 

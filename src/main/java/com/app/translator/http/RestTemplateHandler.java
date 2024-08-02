@@ -34,7 +34,7 @@ public class RestTemplateHandler {
     private void loadHeaders() {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(java.util.Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set(HttpKeysConstants.AUTHORIZATION_KEY.toString(),  String.format("Api-Key %s", token));
+        headers.set(HttpKeysConstants.AUTHORIZATION_KEY.toString(),  String.format(HttpKeysConstants.API_KEY_FORMAT.toString(), token));
     }
 
     private void buildRequest(String sourceLanguage, String targetLanguage, String sentence) {
