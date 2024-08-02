@@ -65,11 +65,7 @@ public class ConnectionManager {
     }
 
     private Connection open() throws SQLException {
-        return DriverManager.getConnection(
-                propertiesManager.get(URL),
-                propertiesManager.get(USERNAME),
-                propertiesManager.get(PASSWORD)
-        );
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 
     public Connection get() throws SQLException {
