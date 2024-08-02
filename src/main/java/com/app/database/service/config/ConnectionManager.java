@@ -1,7 +1,5 @@
 package com.app.database.service.config;
 
-import com.app.config.PropertiesManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -35,14 +33,12 @@ public class ConnectionManager {
 
     private static List<Connection> sourceConnections;
 
-    @Autowired
-    public ConnectionManager(PropertiesManager propertiesManager) throws SQLException {
-        this.propertiesManager = propertiesManager;
+    public ConnectionManager() throws SQLException {
         initConnectionPool();
     }
 
     private void initConnectionPool() throws SQLException {
-        String poolSize = propertiesManager.get(POOL_SIZE);
+        String poolSize = POOL_SIZE;
         int size = poolSize == null ? POOL_SIZE_DEFAULT : Integer.parseInt(poolSize);
         pool = new ArrayBlockingQueue<>(size);
         sourceConnections = new ArrayList<>(size);
