@@ -39,4 +39,10 @@ public class UserInfoDaoTest {
         UserInfo user = dao.save(new UserInfo("aloha!"));
         Assertions.assertEquals(user, dao.findById(user.getId()).orElse(null));
     }
+
+    @Test
+    public void getIdByIpAddressTest() throws DaoException {
+        UserInfo user = dao.save(new UserInfo("Hello, world!"));
+        Assertions.assertEquals(user.getId(), dao.getId("Hello, world!").orElse(null));
+    }
 }

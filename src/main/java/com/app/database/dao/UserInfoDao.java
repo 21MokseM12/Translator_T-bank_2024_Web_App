@@ -2,7 +2,7 @@ package com.app.database.dao;
 
 import com.app.database.entities.UserInfo;
 import com.app.database.exceptions.DaoException;
-import com.app.database.service.config.ConnectionManager;
+import com.app.database.config.ConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -39,11 +39,39 @@ public class UserInfoDao implements DAO<Long, UserInfo> {
             WHERE id = ?
             """;
 
+    private static final String FIND_BY_IP_SQL = """
+            SELECT id
+            FROM user_info
+            WHERE ip_address = ?
+            """;
+
     private final ConnectionManager connectionManager;
 
     @Autowired
     public UserInfoDao(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
+    }
+
+    public Optional<Long> getId(String ipAddress) throws DaoException {
+        try {
+            return getId(ipAddress, connectionManager.get());
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    public Optional<Long> getId(String ipAddress, Connection connection) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(FIND_BY_IP_SQL)) {
+            statement.setString(1, ipAddress);
+
+            Long id = null;
+            ResultSet response = statement.executeQuery();
+            if (response.next()) id = response.getLong("id");
+
+            return Optional.ofNullable(id);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override

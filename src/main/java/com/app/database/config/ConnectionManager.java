@@ -1,8 +1,7 @@
-package com.app.database.service.config;
+package com.app.database.config;
 
 import com.app.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Proxy;
