@@ -90,8 +90,8 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        fromLanguage: fromLanguage,
-                        toLanguage: toLanguage,
+                        sourceLanguage: fromLanguage,
+                        targetLanguage: toLanguage,
                         sentence: sentence
                     })
                 })
