@@ -16,26 +16,26 @@ public class UserInfoDaoTest {
     private UserInfoDao dao;
 
     @Test
-    public void saveMethodTest() throws DaoException {
+    public void saveEntityTest() throws DaoException {
         UserInfo user = new UserInfo(11L, "1:2:7");
         Assertions.assertEquals(user, dao.save(new UserInfo("1:2:7")));
     }
 
     @Test
-    public void deleteMethodTest() throws DaoException {
+    public void deleteEntityTest() throws DaoException {
         UserInfo user = dao.save(new UserInfo("1:2:5"));
         Assertions.assertTrue(dao.delete(user.getId()));
     }
 
     @Test
-    public void updateMethodTest() throws DaoException {
+    public void updateEntityTest() throws DaoException {
         UserInfo user = dao.save(new UserInfo("2:3:4"));
         user.setIpAddress("5:6:7");
         Assertions.assertTrue(dao.update(user));
     }
 
     @Test
-    public void getEntityMethodTest() throws DaoException {
+    public void readEntityTest() throws DaoException {
         UserInfo user = dao.save(new UserInfo("aloha!"));
         Assertions.assertEquals(user, dao.findById(user.getId()).orElse(null));
     }
