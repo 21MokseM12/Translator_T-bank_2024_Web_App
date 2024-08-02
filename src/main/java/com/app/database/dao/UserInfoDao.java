@@ -4,12 +4,12 @@ import com.app.database.entities.UserInfo;
 import com.app.database.exceptions.DaoException;
 import com.app.database.service.config.ConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.Optional;
 
-@Service
+@Repository
 public class UserInfoDao implements DAO<Long, UserInfo> {
 
     private static final String SAVE_SQL = """
