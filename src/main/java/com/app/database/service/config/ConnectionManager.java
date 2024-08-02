@@ -1,5 +1,7 @@
 package com.app.database.service.config;
 
+import com.app.config.PropertiesManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +17,13 @@ import java.util.concurrent.BlockingQueue;
 @Service
 public class ConnectionManager {
 
-    @Value("${db.url}")
-    private static String URL;
+    private static final String URL = "db.url";
 
-    @Value("${db.username}")
-    private static String USERNAME;
+    private static final String USERNAME = "db.username";
 
-    @Value("${db.password}")
-    private static String PASSWORD;
+    private static final String PASSWORD = "db.password";
 
-    @Value("${db.pool.size}")
-    private static String POOL_SIZE;
+    private static final String POOL_SIZE = "db.pool.size";
 
     private static final int POOL_SIZE_DEFAULT = 10;
 
@@ -33,12 +31,16 @@ public class ConnectionManager {
 
     private static List<Connection> sourceConnections;
 
-    public ConnectionManager() throws SQLException {
+    private final PropertiesManager propertiesManager;
+
+    @Autowired
+    public ConnectionManager(PropertiesManager propertiesManager) throws SQLException {
+        this.propertiesManager = propertiesManager;
         initConnectionPool();
     }
 
     private void initConnectionPool() throws SQLException {
-        String poolSize = POOL_SIZE;
+        String poolSize = propertiesManager.get(POOL_SIZE);
         int size = poolSize == null ? POOL_SIZE_DEFAULT : Integer.parseInt(poolSize);
         pool = new ArrayBlockingQueue<>(size);
         sourceConnections = new ArrayList<>(size);
@@ -59,7 +61,11 @@ public class ConnectionManager {
     }
 
     private Connection open() throws SQLException {
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        return DriverManager.getConnection(
+                propertiesManager.get(URL),
+                propertiesManager.get(USERNAME),
+                propertiesManager.get(PASSWORD)
+        );
     }
 
     public Connection get() throws SQLException {
