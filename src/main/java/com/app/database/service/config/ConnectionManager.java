@@ -35,8 +35,6 @@ public class ConnectionManager {
 
     private static List<Connection> sourceConnections;
 
-    private final PropertiesManager propertiesManager;
-
     @Autowired
     public ConnectionManager(PropertiesManager propertiesManager) throws SQLException {
         this.propertiesManager = propertiesManager;
