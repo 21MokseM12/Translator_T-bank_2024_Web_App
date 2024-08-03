@@ -1,23 +1,28 @@
 package com.app.web.controllers;
 
 import com.app.database.services.DataBaseAPI;
+import com.app.translator.exceptions.TranslatorAPIException;
 import com.app.translator.services.TranslatorAPI;
 import com.app.web.entities.TranslateRequest;
 import com.app.web.entities.TranslateResponse;
+import com.app.web.enums.TranslatedSentenceExceptionConstants;
+import com.app.web.utils.InputTranslateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class TranslateController {
 
+    private final InputTranslateValidator validator;
+
     private final TranslatorAPI translator;
 
     private final DataBaseAPI database;
 
     @Autowired
-    public TranslateController(TranslatorAPI translator, DataBaseAPI database) {
+    public TranslateController(TranslatorAPI translator, DataBaseAPI database, InputTranslateValidator validator) {
+        this.validator = validator;
         this.translator = translator;
         this.database = database;
     }
@@ -30,6 +35,30 @@ public class TranslateController {
     @PostMapping("/translate")
     @ResponseBody
     public TranslateResponse translateSentence(@RequestBody TranslateRequest request) {
-        return new TranslateResponse(request.getSentence() + "(перевод)");
+        String sourceLanguage = validator.validateSpaces(request.getSourceLanguage()),
+                targetLanguage = validator.validateSpaces(request.getTargetLanguage()),
+                sentence = validator.validateSpaces(request.getSentence());
+
+        TranslateResponse translateSentence = new TranslateResponse();
+
+        if (!validator.isValidLanguage(sourceLanguage))
+            translateSentence.setTranslation(TranslatedSentenceExceptionConstants.INVALID_INPUT_SOURCE_LANGUAGE.toString());
+        else if (!validator.isValidLanguage(targetLanguage))
+            translateSentence.setTranslation(TranslatedSentenceExceptionConstants.INVALID_INPUT_TARGET_LANGUAGE.toString());
+        else if (!validator.isValidSentence(sentence))
+            translateSentence.setTranslation(TranslatedSentenceExceptionConstants.INVALID_SENTENCE.toString());
+        else {
+            try {
+                translateSentence.setTranslation("http 200 ".concat(translator.translate(
+                        sourceLanguage,
+                        targetLanguage,
+                        sentence)
+                ));
+            } catch (TranslatorAPIException e) {
+                translateSentence.setTranslation(TranslatedSentenceExceptionConstants.INVALID_RESPONSE.toString());
+            }
+        }
+
+        return translateSentence;
     }
 }

@@ -8,4 +8,6 @@ import lombok.Data;
 public class TranslateResponse {
 
     private String translation;
+
+    public TranslateResponse() {}
 }

@@ -53,7 +53,7 @@ public class TranslatorAPI {
                     try {
                         return task.call();
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        log.error(e.getMessage());
                         return null;
                     }
                 }));
@@ -67,7 +67,9 @@ public class TranslatorAPI {
         try {
             result = new StringBuilder();
             for (Future<String> future : futures)
-                result.append(future.get()).append(' ');
+                if (future.get() != null)
+                    result.append(future.get()).append(' ');
+                else throw new TranslatorAPIException();
         } catch (InterruptedException | ExecutionException e) {
             throw new TranslatorAPIException(e);
         }

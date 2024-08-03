@@ -53,21 +53,13 @@
 
 <body>
 <div class="translator-container">
-    <h1>Переводчик слов</h1>
+    <h1>Переводчик</h1>
     <form id="translator-form">
         <label for="from-language">С какого языка:</label>
-        <select id="from-language" name="from-language">
-            <option value="ru">Русский</option>
-            <option value="en">Английский</option>
-            <option value="es">Испанский</option>
-        </select>
+        <textarea id="from-language" name="from-language" rows="1" placeholder="Введите язык здесь..."></textarea>
 
         <label for="to-language">На какой язык:</label>
-        <select id="to-language" name="to-language">
-            <option value="ru">Русский</option>
-            <option value="en">Английский</option>
-            <option value="es">Испанский</option>
-        </select>
+        <textarea id="to-language" name="to-language" rows="1" placeholder="Введите язык здесь..."></textarea>
 
         <label for="sentence">Предложение для перевода:</label>
         <textarea id="sentence" name="sentence" rows="4" placeholder="Введите текст здесь..."></textarea>
@@ -97,14 +89,18 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(`Перевод: ` + data.translation);
+                    alert(data.translation);
                 })
                 .catch(error => {
                     console.error('Ошибка:', error);
-                    alert('Произошла ошибка при переводе.');
+                    alert('http 400 Ошибка доступа к ресурсу перевода');
                 });
+            } else if (!fromLanguage && toLanguage && sentence) {
+                alert('http 400 Не найден язык исходного сообщения');
+            } else if (fromLanguage && !toLanguage && sentence) {
+                alert(`http 400 Не найден язык итогового сообщения`);
             } else {
-                alert('Пожалуйста, заполните все поля.');
+                alert(`http 400 Не найдено выражение для перевода`);
             }
         });
 </script>
