@@ -10,7 +10,11 @@ public enum HttpKeysConstants {
 
     SENTENCE_TRANSLATE_KEY("texts"),
 
-    API_KEY_FORMAT("Api-Key %s");
+    API_KEY_FORMAT("Api-Key %s"),
+
+    TRANSLATIONS_KEY("translations"),
+
+    TEXT_KEY("text");
 
     private final String key;
 

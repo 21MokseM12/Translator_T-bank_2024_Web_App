@@ -26,9 +26,12 @@ public class RestTemplateHandler {
 
     private Map<String, Object> requestBody;
 
+    private final ObjectMapper objectMapper;
+
     public RestTemplateHandler() {
         restTemplate = new RestTemplate();
         headers = new HttpHeaders();
+        objectMapper = new ObjectMapper();
     }
 
     private void loadHeaders() {
@@ -44,11 +47,10 @@ public class RestTemplateHandler {
         requestBody.put(HttpKeysConstants.SENTENCE_TRANSLATE_KEY.toString(), new String[] {sentence});
     }
 
-    public ResponseEntity<String> POST(String sourceLanguage, String targetLanguage, String sentence) throws RestTemplateHandlerException {
+    synchronized public ResponseEntity<String> POST(String sourceLanguage, String targetLanguage, String sentence) throws RestTemplateHandlerException {
         loadHeaders();
         buildRequest(sourceLanguage, targetLanguage, sentence);
 
-        ObjectMapper objectMapper = new ObjectMapper();
         String body;
 
         try {

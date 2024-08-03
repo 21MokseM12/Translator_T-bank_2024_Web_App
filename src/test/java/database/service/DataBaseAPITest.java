@@ -2,7 +2,7 @@ package database.service;
 
 import com.app.App;
 import com.app.database.exceptions.DataBaseAPIException;
-import com.app.database.service.DataBaseAPI;
+import com.app.database.services.DataBaseAPI;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -56,7 +56,6 @@ public class ConnectionManager {
             pool.add((Connection) proxyConnection);
             sourceConnections.add(connection);
         }
-
     }
 
     private Connection open() throws SQLException {

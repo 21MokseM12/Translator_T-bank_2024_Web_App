@@ -1,4 +1,4 @@
-package com.app.database.service;
+package com.app.database.services;
 
 import com.app.database.config.ConnectionManager;
 import com.app.database.dao.RequestDao;
