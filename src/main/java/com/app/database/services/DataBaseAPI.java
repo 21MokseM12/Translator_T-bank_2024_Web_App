@@ -7,6 +7,7 @@ import com.app.database.entities.Request;
 import com.app.database.entities.UserInfo;
 import com.app.database.exceptions.DaoException;
 import com.app.database.exceptions.DataBaseAPIException;
+import com.app.database.utils.DataEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,26 +25,34 @@ public class DataBaseAPI {
 
     private final RequestDao requestDao;
 
+    private final DataEncoder encoder;
+
     @Autowired
-    public DataBaseAPI(UserInfoDao userDao, RequestDao requestDao, ConnectionManager connectionManager) {
+    public DataBaseAPI(UserInfoDao userDao, RequestDao requestDao, ConnectionManager connectionManager, DataEncoder encoder) {
         this.connectionManager = connectionManager;
         this.userDao = userDao;
         this.requestDao = requestDao;
+        this.encoder = encoder;
     }
 
     public boolean save(String ipAddress, String requestSentence, String responseSentence) throws DataBaseAPIException {
+
+        String encodeIpAddress = encoder.encode(ipAddress),
+        encodeRequestSentence = encoder.encode(requestSentence),
+        encodeResponseSentence = encoder.encode(responseSentence);
+
         try {
             Connection connection = connectionManager.get();
             try {
                 connection.setAutoCommit(false);
 
-                Long userId = userDao.getId(ipAddress, connection).orElse(null);
+                Long userId = userDao.getId(encodeIpAddress, connection).orElse(null);
 
                 UserInfo user;
-                if (userId == null) user = userDao.save(new UserInfo(ipAddress), connection);
+                if (userId == null) user = userDao.save(new UserInfo(encodeIpAddress), connection);
                 else user = userDao.findById(userId, connection).orElse(null);
 
-                Request result = requestDao.save(new Request(user, requestSentence, responseSentence), connection);
+                Request result = requestDao.save(new Request(user, encodeRequestSentence, encodeResponseSentence), connection);
 
                 connection.commit();
 
