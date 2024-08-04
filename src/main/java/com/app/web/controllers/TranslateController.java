@@ -1,5 +1,6 @@
 package com.app.web.controllers;
 
+import com.app.database.exceptions.DataBaseAPIException;
 import com.app.database.services.DataBaseAPI;
 import com.app.translator.exceptions.TranslatorAPIException;
 import com.app.translator.services.TranslatorAPI;
@@ -37,7 +38,8 @@ public class TranslateController {
     public TranslateResponse translateSentence(@RequestBody TranslateRequest request) {
         String sourceLanguage = validator.validateSpaces(request.getSourceLanguage()),
                 targetLanguage = validator.validateSpaces(request.getTargetLanguage()),
-                sentence = validator.validateSpaces(request.getSentence());
+                sentence = validator.validateSpaces(request.getSentence()),
+                ipAddress = validator.validateSpaces(request.getIpAddress());
 
         TranslateResponse translateSentence = new TranslateResponse();
 
@@ -49,12 +51,12 @@ public class TranslateController {
             translateSentence.setTranslation(TranslatedSentenceExceptionConstants.INVALID_SENTENCE.toString());
         else {
             try {
-                translateSentence.setTranslation("http 200 ".concat(translator.translate(
-                        sourceLanguage,
-                        targetLanguage,
-                        sentence)
-                ));
-            } catch (TranslatorAPIException e) {
+                String translatedSentence = translator.translate(sourceLanguage, targetLanguage, sentence);
+
+                translateSentence.setTranslation("http 200 ".concat(translatedSentence));
+
+                database.save(ipAddress, sentence, translatedSentence);
+            } catch (TranslatorAPIException | DataBaseAPIException e) {
                 translateSentence.setTranslation(TranslatedSentenceExceptionConstants.INVALID_RESPONSE.toString());
             }
         }
