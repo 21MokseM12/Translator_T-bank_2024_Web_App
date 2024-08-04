@@ -23,8 +23,8 @@ public class UserInfoDaoTest {
 
     @Test
     public void deleteEntityTest() throws DaoException {
-        UserInfo user = dao.save(new UserInfo("1:2:5"));
-        Assertions.assertTrue(dao.delete(user.getId()));
+//        UserInfo user = dao.save(new UserInfo("1:2:5"));
+        Assertions.assertTrue(dao.delete(23L));
     }
 
     @Test

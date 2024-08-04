@@ -25,6 +25,12 @@ public class UserInfoDao implements DAO<Long, UserInfo> {
             WHERE id = ?
             """;
 
+    private static final String DELETE_REQUESTS_BY_ID_SQL = """
+            DELETE
+            FROM request
+            WHERE user_id = ?
+            """;
+
     private static final String FIND_BY_ID_SQL = """
             SELECT
                 id,
@@ -109,10 +115,24 @@ public class UserInfoDao implements DAO<Long, UserInfo> {
     }
 
     public boolean delete(Long id, Connection connection) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
-            statement.setLong(1, id);
+        try {
+            connection.setAutoCommit(false);
+            try (PreparedStatement statementDeleteUserInfo = connection.prepareStatement(DELETE_SQL);
+                 PreparedStatement statementDeleteRequests = connection.prepareStatement(DELETE_REQUESTS_BY_ID_SQL)) {
+                statementDeleteUserInfo.setLong(1, id);
+                statementDeleteRequests.setLong(1, id);
 
-            return statement.executeUpdate() > 0;
+                statementDeleteRequests.executeUpdate();
+                int result = statementDeleteUserInfo.executeUpdate();
+
+                connection.commit();
+                return result > 0;
+            } catch (SQLException e) {
+                connection.rollback();
+                throw new DaoException(e);
+            } finally {
+                connection.close();
+            }
         } catch (SQLException e) {
             throw new DaoException(e);
         }
