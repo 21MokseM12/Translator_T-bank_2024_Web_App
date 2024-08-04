@@ -10,4 +10,6 @@ public class TranslateRequest {
     private String targetLanguage;
 
     private String sentence;
+
+    private String ipAddress;
 }

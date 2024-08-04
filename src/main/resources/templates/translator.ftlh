@@ -76,33 +76,46 @@
         const sentence = document.getElementById('sentence').value;
 
         if (fromLanguage && toLanguage && sentence) {
-            fetch('/translate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        sourceLanguage: fromLanguage,
-                        targetLanguage: toLanguage,
-                        sentence: sentence
-                    })
-                })
-                .then(response => response.json())
+            let ipAddress;
+
+            fetch('https://api.ipify.org?format=json')
+                .then(res => res.json())
                 .then(data => {
-                    alert(data.translation);
+                    ipAddress = data.ip;
+
+                    fetch('/translate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            sourceLanguage: fromLanguage,
+                            targetLanguage: toLanguage,
+                            sentence: sentence,
+                            ipAddress: ipAddress
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(`Перевод: ` + data.translation);
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        alert('http 400 Ошибка доступа к ресурсу перевода');
+                    });
                 })
                 .catch(error => {
-                    console.error('Ошибка:', error);
-                    alert('http 400 Ошибка доступа к ресурсу перевода');
+                    console.error('Ошибка при получении IP-адреса:', error);
+                    alert('http 400 Ошибка при получении IP-адреса');
                 });
-            } else if (!fromLanguage && toLanguage && sentence) {
-                alert('http 400 Не найден язык исходного сообщения');
-            } else if (fromLanguage && !toLanguage && sentence) {
-                alert(`http 400 Не найден язык итогового сообщения`);
-            } else {
-                alert(`http 400 Не найдено выражение для перевода`);
-            }
-        });
+        } else if (!fromLanguage && toLanguage && sentence) {
+            alert('http 400 Не найден язык исходного сообщения');
+        } else if (fromLanguage && !toLanguage && sentence) {
+            alert(`http 400 Не найден язык итогового сообщения`);
+        } else {
+            alert(`http 400 Не найдено выражение для перевода`);
+        }
+    });
 </script>
 </body>
 </html>
