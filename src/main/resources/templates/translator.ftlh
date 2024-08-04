@@ -106,16 +106,17 @@
                 })
                 .catch(error => {
                     console.error('Ошибка при получении IP-адреса:', error);
-                    alert('http 400 Ошибка при получении IP-адреса');
                 });
-        } else if (!fromLanguage && toLanguage && sentence) {
-            alert('http 400 Не найден язык исходного сообщения');
-        } else if (fromLanguage && !toLanguage && sentence) {
-            alert(`http 400 Не найден язык итогового сообщения`);
         } else {
-            alert(`http 400 Не найдено выражение для перевода`);
+            if (!fromLanguage && !toLanguage && !sentence) alert(`http 400 Ни одно поле не заполнено`);
+            else {
+                if (!fromLanguage) alert('http 400 Не найден язык исходного сообщения');
+                if (!toLanguage) alert(`http 400 Не найден язык итогового сообщения`);
+                if (!sentence) alert(`http 400 Не найдено выражение для перевода`);
+            }
         }
     });
 </script>
+
 </body>
 </html>
