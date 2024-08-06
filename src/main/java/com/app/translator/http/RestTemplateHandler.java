@@ -1,5 +1,6 @@
 package com.app.translator.http;
 
+import com.app.config.PropertiesManager;
 import com.app.translator.enums.HttpKeysConstants;
 import com.app.translator.exceptions.RestTemplateHandlerException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,7 +16,8 @@ import java.util.Map;
 @Component
 public class RestTemplateHandler {
 
-    @Value("${translator.api.token}")
+    private static final String TOKEN_KEY = "translator.api.token";
+
     private String token;
 
     private static final String source = "https://translate.api.cloud.yandex.net/translate/v2/translate";
@@ -28,7 +30,12 @@ public class RestTemplateHandler {
 
     private final ObjectMapper objectMapper;
 
-    public RestTemplateHandler() {
+    private final PropertiesManager propertiesManager;
+
+    public RestTemplateHandler(PropertiesManager propertiesManager) {
+        this.propertiesManager = propertiesManager;
+        token = propertiesManager.get(TOKEN_KEY);
+
         restTemplate = new RestTemplate();
         headers = new HttpHeaders();
         objectMapper = new ObjectMapper();

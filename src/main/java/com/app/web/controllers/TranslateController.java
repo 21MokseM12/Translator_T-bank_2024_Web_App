@@ -8,11 +8,13 @@ import com.app.web.entities.TranslateRequest;
 import com.app.web.entities.TranslateResponse;
 import com.app.web.enums.TranslatedSentenceExceptionConstants;
 import com.app.web.utils.InputTranslateValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@Slf4j
 public class TranslateController {
 
     private final InputTranslateValidator validator;
@@ -57,6 +59,7 @@ public class TranslateController {
 
                 database.save(ipAddress, sentence, translatedSentence);
             } catch (TranslatorAPIException | DataBaseAPIException e) {
+                log.error(e.getMessage());
                 translateSentence.setTranslation(TranslatedSentenceExceptionConstants.INVALID_RESPONSE.toString());
             }
         }
